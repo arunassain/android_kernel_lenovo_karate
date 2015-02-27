@@ -968,8 +968,6 @@ void sched_set_stop_task(int cpu, struct task_struct *stop)
 		stop->sched_class = &stop_sched_class;
 	}
 
-<<<<<<< HEAD
-
 	if (old_stop) {
 		/*
 		 * Reset it back to a normal scheduling class so that
@@ -9688,8 +9686,8 @@ void __init sched_init(void)
 #ifdef CONFIG_SMP
 		rq->sd = NULL;
 		rq->rd = NULL;
-		rq->cpu_capacity = SCHED_CAPACITY_SCALE;
-		rq->balance_callback = NULL;
+		rq->cpu_capacity = rq->cpu_capacity_orig = SCHED_CAPACITY_SCALE;
+		rq->post_schedule = 0;
 		rq->active_balance = 0;
 		rq->next_balance = jiffies;
 		rq->push_cpu = 0;
