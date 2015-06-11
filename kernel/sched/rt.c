@@ -2055,7 +2055,7 @@ void rto_push_irq_work_func(struct irq_work *work)
 }
 #endif /* HAVE_RT_PUSH_IPI */
 
-static int pull_rt_task(struct rq *this_rq)
+static void pull_rt_task(struct rq *this_rq)
 {
 	int this_cpu = this_rq->cpu, cpu;
 	bool resched = false;
@@ -2074,7 +2074,7 @@ static int pull_rt_task(struct rq *this_rq)
 #ifdef HAVE_RT_PUSH_IPI
 	if (sched_feat(RT_PUSH_IPI)) {
 		tell_cpu_to_push(this_rq);
-		return 0;
+		return;
 	}
 #endif
 
@@ -2145,6 +2145,11 @@ skip:
 
 	if (resched)
 		resched_curr(this_rq);
+}
+
+static void post_schedule_rt(struct rq *rq)
+{
+	push_rt_tasks(rq);
 }
 
 /*
@@ -2240,7 +2245,7 @@ static void switched_from_rt(struct rq *rq, struct task_struct *p)
 	if (!task_on_rq_queued(p) || rq->rt.rt_nr_running)
 		return;
 
-	queue_pull_task(rq);
+	pull_rt_task(rq);
 }
 
 void __init init_sched_rt_class(void)
