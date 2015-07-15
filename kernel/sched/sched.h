@@ -1284,7 +1284,7 @@ extern void init_dl_task_timer(struct sched_dl_entity *dl_se);
 
 unsigned long to_ratio(u64 period, u64 runtime);
 
-extern void init_task_runnable_average(struct task_struct *p);
+extern void init_entity_runnable_average(struct sched_entity *se);
 
 #if defined(CONFIG_INTELLI_PLUG) || defined(CONFIG_LAZYPLUG)
 static inline unsigned int do_avg_nr_running(struct rq *rq)
