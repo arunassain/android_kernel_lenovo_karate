@@ -1646,7 +1646,7 @@ static int bfq_merge(struct request_queue *q, struct request **req,
 	struct request *__rq;
 
 	__rq = bfq_find_rq_fmerge(bfqd, bio);
-	if (__rq && elv_rq_merge_ok(__rq, bio)) {
+	if (__rq != NULL && elv_bio_merge_ok(__rq, bio)) {
 		*req = __rq;
 		return ELEVATOR_FRONT_MERGE;
 	}
@@ -5265,10 +5265,11 @@ static struct elevator_type iosched_bfq = {
 		.elevator_merge_fn =		bfq_merge,
 		.elevator_merged_fn =		bfq_merged_request,
 		.elevator_merge_req_fn =	bfq_merged_requests,
+<<<<<<< HEAD
 #ifdef CONFIG_BFQ_GROUP_IOSCHED
 		.elevator_bio_merged_fn =	bfq_bio_merged,
 #endif
-		.elevator_allow_merge_fn =	bfq_allow_merge,
+		.elevator_allow_bio_merge_fn =	bfq_allow_merge,
 		.elevator_dispatch_fn =		bfq_dispatch_requests,
 		.elevator_add_req_fn =		bfq_insert_request,
 		.elevator_activate_req_fn =	bfq_activate_request,
