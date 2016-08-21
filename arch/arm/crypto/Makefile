@@ -23,6 +23,8 @@ sha2-arm-ce-y	:= sha2-ce-core.o sha2-ce-glue.o
 
 ccflags-y := -O3
 
+ccflags-y := -O3
+
 quiet_cmd_perl = PERL    $@
       cmd_perl = $(PERL) $(<) > $(@)
 
