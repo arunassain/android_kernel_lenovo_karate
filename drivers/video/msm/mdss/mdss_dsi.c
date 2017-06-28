@@ -2670,13 +2670,13 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 		break;
 	case MDSS_EVENT_PANEL_ON:
 		pr_info("[LCD]%s:Entered Case MDSS_EVENT_PANEL_ON\n", __func__);
+#ifdef CONFIG_STATE_NOTIFIER
+		state_resume();
+#endif
 		ctrl_pdata->ctrl_state |= CTRL_STATE_MDP_ACTIVE;
 		if (ctrl_pdata->on_cmds.link_state == DSI_HS_MODE)
 			rc = mdss_dsi_unblank(pdata);
 		pdata->panel_info.esd_rdy = true;
-#ifdef CONFIG_STATE_NOTIFIER
-		state_resume();
-#endif
 		break;
 	case MDSS_EVENT_BLANK:
 		pr_info("[LCD]%s:Entered Case MDSS_EVENT_BLANK\n", __func__);
