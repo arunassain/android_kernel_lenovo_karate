@@ -460,6 +460,8 @@ static int get_size_class_index(int size)
 	return min(zs_size_classes - 1, idx);
 }
 
+
+/* type can be of enum type zs_stat_type or fullness_group */
 static inline void zs_stat_inc(struct size_class *class,
 				int type, unsigned long cnt)
 {
