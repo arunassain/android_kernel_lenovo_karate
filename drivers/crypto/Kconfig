@@ -349,7 +349,7 @@ config CRYPTO_DEV_QCOM_MSM_QCE
           For MSM8960, APQ8064 and MSM9615 the module is called qce40
           For MSM8974, MSM8916, MSM8994, MSM8996, MSM8992, MSM8917,
           MSM8920, MSM8937, MSM8940, MSM8953, SDM450, MSM8909
-          MDM9640, MDM9607 and APQ8084 the module is called qce50.
+	  MDM9640, MDM9607 and APQ8084 the module is called qce50.
 
 config CRYPTO_DEV_QCEDEV
         tristate "QCEDEV Interface to CE module"
