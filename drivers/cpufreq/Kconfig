@@ -145,6 +145,17 @@ config CPU_FREQ_DEFAULT_GOV_ALUCARD
 	select CPU_FREQ_GOV_ALUCARD
 	help
 
+config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
+        bool "zzmoove"
+ 	select CPU_FREQ_GOV_ZZMOOVE
+ 	select CPU_FREQ_GOV_PERFORMANCE
+ 	help
+ 	Use the CPUFreq governor 'zzmoove' as default, using predefined
+ 	frequency lookup tables and optimized scaling triggers instead of
+ 	% frequency steps to get smooth up/downscaling dependant on CPU load.
+
+endchoice
+
 config CPU_FREQ_GOV_PERFORMANCE
 	tristate "'performance' governor"
 	help
@@ -289,6 +300,18 @@ config CPU_BOOST
 	  - Migration of important threads from one CPU to another.
 
 	  If in doubt, say N.
+
+config CPU_FREQ_GOV_ZZMOOVE
+ 	tristate "'zzmoove' cpufreq governor"
+ 	depends on CPU_FREQ
+ 	help
+ 	  'zzmoove' - based on cpufreq_conservative, using predefined
+ 	  frequency lookup tables and optimized scaling triggers instead of
+ 	  % frequency steps to get smooth up/downscaling dependant on CPU load.
+ 	  If in doubt, say N.
+
+
+comment "CPU frequency scaling drivers"
 
 config FINGERPRINT_BOOST
 	bool "Fingerprint Boost"
