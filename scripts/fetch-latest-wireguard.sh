@@ -26,3 +26,6 @@ mkdir -p net/wireguard
 curl -A "$USER_AGENT" -LsS "https://git.zx2c4.com/WireGuard/snapshot/WireGuard-$VERSION.tar.xz" | tar -C "net/wireguard" -xJf - --strip-components=2 "WireGuard-$VERSION/src"
 sed -i 's/tristate/bool/;s/default m/default y/;' net/wireguard/Kconfig
 touch net/wireguard/.check
+sed '/\["#define RCU_LOCKDEP_WARN"\]/a #ifndef RCU_LOCKDEP_WARN' net/wireguard/compat/compat.h
+sed '/\["#ifndef RCU_LOCKDEP_WARN"\]/a #include <linux/rcupdate.h>' net/wireguard/compat/compat.h
+sed '/\["#define RCU_LOCKDEP_WARN"\]/a #endif' net/wireguard/compat/compat.h
