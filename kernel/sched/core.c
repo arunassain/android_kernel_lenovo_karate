@@ -1702,7 +1702,7 @@ struct cpu_cycle {
 
 /*
  * sched_window_stats_policy, sched_ravg_hist_size,
- * sched_migration_fixup have a 'sysctl' copy
+ * sched_migration_fixup, sched_freq_account_wait_time have a 'sysctl' copy
  * associated with them. This is required for atomic update of those variables
  * when being modifed via sysctl interface.
  *
@@ -1743,7 +1743,8 @@ __read_mostly unsigned int sysctl_sched_new_task_windows = 5;
 static __read_mostly unsigned int sched_migration_fixup = 1;
 __read_mostly unsigned int sysctl_sched_migration_fixup = 1;
 
-#define SCHED_FREQ_ACCOUNT_WAIT_TIME 0
+static __read_mostly unsigned int sched_freq_account_wait_time;
+__read_mostly unsigned int sysctl_sched_freq_account_wait_time;
 
 /*
  * For increase, send notification if
@@ -2104,11 +2105,11 @@ static int account_busy_for_cpu_time(struct rq *rq, struct task_struct *p,
 		if (rq->curr == p)
 			return 1;
 
-		return p->on_rq ? SCHED_FREQ_ACCOUNT_WAIT_TIME : 0;
+		return p->on_rq ? sched_freq_account_wait_time : 0;
 	}
 
 	/* TASK_MIGRATE, PICK_NEXT_TASK left */
-	return SCHED_FREQ_ACCOUNT_WAIT_TIME;
+	return sched_freq_account_wait_time;
 }
 
 static inline int
@@ -2297,7 +2298,7 @@ void update_task_pred_demand(struct rq *rq, struct task_struct *p, int event)
 		return;
 
 	if (event != PUT_PREV_TASK && event != TASK_UPDATE &&
-			(!SCHED_FREQ_ACCOUNT_WAIT_TIME ||
+			(!sched_freq_account_wait_time ||
 			 (event != TASK_MIGRATE &&
 			 event != PICK_NEXT_TASK)))
 		return;
@@ -2307,7 +2308,7 @@ void update_task_pred_demand(struct rq *rq, struct task_struct *p, int event)
 	 * related groups
 	 */
 	if (event == TASK_UPDATE) {
-		if (!p->on_rq && !SCHED_FREQ_ACCOUNT_WAIT_TIME)
+		if (!p->on_rq && !sched_freq_account_wait_time)
 			return;
 	}
 
@@ -3183,6 +3184,7 @@ enum reset_reason_code {
 	POLICY_CHANGE,
 	HIST_SIZE_CHANGE,
 	MIGRATION_FIXUP_CHANGE,
+	FREQ_ACCOUNT_WAIT_TIME_CHANGE,
 	FREQ_AGGREGATE_CHANGE,
 };
 
@@ -3191,7 +3193,7 @@ const char *sched_window_reset_reasons[] = {
 	"POLICY_CHANGE",
 	"HIST_SIZE_CHANGE",
 	"MIGRATION_FIXUP_CHANGE",
-};
+	"FREQ_ACCOUNT_WAIT_TIME_CHANGE"};
 
 /* Called with IRQs enabled */
 void reset_all_window_stats(u64 window_start, unsigned int window_size)
@@ -3265,6 +3267,13 @@ void reset_all_window_stats(u64 window_start, unsigned int window_size)
 		old = sched_migration_fixup;
 		new = sysctl_sched_migration_fixup;
 		sched_migration_fixup = sysctl_sched_migration_fixup;
+	} else if (sched_freq_account_wait_time !=
+					sysctl_sched_freq_account_wait_time) {
+		reason = FREQ_ACCOUNT_WAIT_TIME_CHANGE;
+		old = sched_freq_account_wait_time;
+		new = sysctl_sched_freq_account_wait_time;
+		sched_freq_account_wait_time =
+				 sysctl_sched_freq_account_wait_time;
 	} else if (sched_freq_aggregate !=
 					sysctl_sched_freq_aggregate) {
 		reason = FREQ_AGGREGATE_CHANGE;
