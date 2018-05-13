@@ -319,9 +319,15 @@ static void msm_restart_prepare(const char *cmd)
 				strcmp(cmd, "userrequested")));
 	}
 
-#ifdef CONFIG_MSM_PRESERVE_MEM
+	/* To preserve console-ramoops */
 	need_warm_reset = true;
-#endif
+
+	/* Perform a regular reboot upon panic or unspecified command */
+	if (in_panic || !cmd) {
+		__raw_writel(0x77665501, restart_reason);
+		cmd = NULL;
+		in_panic = false;
+	}
 
 	/* Hard reset the PMIC unless memory contents must be maintained. */
 	if (need_warm_reset) {
