@@ -428,7 +428,22 @@ static struct attribute_group cs_attr_group_gov_pol = {
 
 /************************** sysfs end ************************/
 
-static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
+static void save_tuners(struct cpufreq_policy *policy,
+			  struct cs_dbs_tuners *tuners)
+{
+	int cpu;
+
+	if (have_governor_per_policy())
+		cpu = cpumask_first(policy->related_cpus);
+	else
+		cpu = 0;
+
+	WARN_ON(per_cpu(cached_tuners, cpu) &&
+		per_cpu(cached_tuners, cpu) != tuners);
+	per_cpu(cached_tuners, cpu) = tuners;
+}
+
+static struct cs_dbs_tuners *alloc_tuners(struct cpufreq_policy *policy)
 {
 	struct cs_dbs_tuners *tuners;
 
