@@ -16,22 +16,22 @@ DEFCONFIG="karate_defconfig"
 KERNEL="Image.gz-dtb"
 
 # Hyper Kernel Details
-BASE_VER="hyper-o"
+BASE_VER="Raiden-o"
 VER="-$(date +"%Y-%m-%d"-%H%M)"
 K_VER="$BASE_VER$VER-karate"
 
 # Vars
 export ARCH=arm64
 export SUBARCH=arm64
-export KBUILD_BUILD_USER="Teja"
-export KBUILD_BUILD_HOST="HYPER™"
-export TZ="Asia/Calcutta"
+export KBUILD_BUILD_USER="arun"
+export KBUILD_BUILD_HOST="BlackBox"
+make nconfig
 
 # Paths
 KERNEL_DIR=`pwd`
-RESOURCE_DIR="/home/hyper/teja/o-upstream"
-ANYKERNEL_DIR="$RESOURCE_DIR/hyper"
-TOOLCHAIN_DIR="/home/hyper/teja/aarch64-4.9"
+RESOURCE_DIR="/home/arun_assain98/kernel"
+ANYKERNEL_DIR="$RESOURCE_DIR/Raiden"
+TOOLCHAIN_DIR="/home/arun_assain98/kernel/aarch64-linux-android-4.9"
 REPACK_DIR="$ANYKERNEL_DIR"
 PATCH_DIR="$ANYKERNEL_DIR/patch"
 MODULES_DIR="$ANYKERNEL_DIR/modules"
@@ -78,7 +78,7 @@ DATE_START=$(date +"%s")
                 cd $KERNEL_DIR
 		make clean && make mrproper
 		echo "cleaned directory"
-		echo "Compiling Hyper-Kernel"
+		echo "Compiling Raiden-Kernel"
 
 echo -e "${restore}"
 
