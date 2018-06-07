@@ -1,15 +1,12 @@
 #!/bin/bash
 rm .version
-# Color Code Script
-Black='\e[0;30m'        # Black
-Red='\e[0;31m'          # Red
-Green='\e[0;32m'        # Green
-Yellow='\e[0;33m'       # Yellow
-Blue='\e[0;34m'         # Blue
-Purple='\e[0;35m'       # Purple
-Cyan='\e[0;36m'         # Cyan
-White='\e[0;37m'        # White
-nocol='\033[0m'         # Default
+# Bash Color
+green='\033[01;32m'
+red='\033[01;31m'
+cyan='\033[01;36m'
+blue='\033[01;34m'
+blink_red='\033[05;31m'
+restore='\033[0m'
 
 clear
 
@@ -26,14 +23,15 @@ K_VER="$BASE_VER$VER-karate"
 # Vars
 export ARCH=arm64
 export SUBARCH=arm64
-export KBUILD_BUILD_USER="arunkumar"
+export KBUILD_BUILD_USER="arun"
 export KBUILD_BUILD_HOST="BlackBox"
+make nconfig
 
 # Paths
 KERNEL_DIR=`pwd`
 RESOURCE_DIR="/home/arun_assain98/kernel"
 ANYKERNEL_DIR="$RESOURCE_DIR/Raiden"
-TOOLCHAIN_DIR="/home/arun_assain98/kernel/toolchain"
+TOOLCHAIN_DIR="/home/arun_assain98/kernel/aarch64-linux-android-4.9"
 REPACK_DIR="$ANYKERNEL_DIR"
 PATCH_DIR="$ANYKERNEL_DIR/patch"
 MODULES_DIR="$ANYKERNEL_DIR/modules"
@@ -70,9 +68,9 @@ function make_zip {
 
 DATE_START=$(date +"%s")
 
-		export CROSS_COMPILE=$TOOLCHAIN_DIR/bin/aarch64-linux-gnu-
+		export CROSS_COMPILE=$TOOLCHAIN_DIR/bin/aarch64-linux-android-
 		export LD_LIBRARY_PATH=$TOOLCHAIN_DIR/lib/
-                STRIP=$TOOLCHAIN_DIR/bin/aarch64-linux-gnu-strip
+                STRIP=$TOOLCHAIN_DIR/bin/aarch64-linux-android-strip
 		rm -rf $MODULES_DIR/*
 		rm -rf $ZIP_MOVE/*
 		cd $ANYKERNEL_DIR
