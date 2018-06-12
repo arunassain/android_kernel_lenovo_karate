@@ -23,7 +23,7 @@ K_VER="$BASE_VER$VER-karate"
 # Vars
 export ARCH=arm64
 export SUBARCH=arm64
-export KBUILD_BUILD_USER="arun"
+export KBUILD_BUILD_USER="arunkumar"
 export KBUILD_BUILD_HOST="BlackBox"
 make nconfig
 
@@ -31,7 +31,7 @@ make nconfig
 KERNEL_DIR=`pwd`
 RESOURCE_DIR="/home/arun_assain98/kernel"
 ANYKERNEL_DIR="$RESOURCE_DIR/Raiden"
-TOOLCHAIN_DIR="/home/arun_assain98/kernel/aarch64-linux-android-4.9"
+TOOLCHAIN_DIR="/home/arun_assain98/kernel/toolchain"
 REPACK_DIR="$ANYKERNEL_DIR"
 PATCH_DIR="$ANYKERNEL_DIR/patch"
 MODULES_DIR="$ANYKERNEL_DIR/modules"
@@ -68,9 +68,9 @@ function make_zip {
 
 DATE_START=$(date +"%s")
 
-		export CROSS_COMPILE=$TOOLCHAIN_DIR/bin/aarch64-linux-android-
+		export CROSS_COMPILE=$TOOLCHAIN_DIR/bin/aarch64-opt-linux-android-
 		export LD_LIBRARY_PATH=$TOOLCHAIN_DIR/lib/
-                STRIP=$TOOLCHAIN_DIR/bin/aarch64-linux-android-strip
+                STRIP=$TOOLCHAIN_DIR/bin/aarch64-opt-linux-android-strip
 		rm -rf $MODULES_DIR/*
 		rm -rf $ZIP_MOVE/*
 		cd $ANYKERNEL_DIR
