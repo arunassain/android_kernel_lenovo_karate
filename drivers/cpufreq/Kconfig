@@ -148,7 +148,6 @@ config CPU_FREQ_DEFAULT_GOV_ELECTRON
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'electron' governor for latency-sensitive workloads.
-endchoice
 
 config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	bool "nightmare"
