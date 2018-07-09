@@ -160,6 +160,7 @@ static struct pm_qos_object *pm_qos_array[] = {
 	&cpu_dma_pm_qos,
 	&network_lat_pm_qos,
 	&network_throughput_pm_qos,
+	&memory_bandwidth_pm_qos,
 	&min_online_cpus_pm_qos,
 	&max_online_cpus_pm_qos
 };
