@@ -362,7 +362,7 @@ config CPU_FREQ_GOV_SCHEDUTIL
 	  If in doubt, say N.
 
 
-onfig CPUFREQ_DT
+config CPUFREQ_DT
 	tristate "Generic DT based cpufreq driver"
 	depends on HAVE_CLK && OF
 	# if CPU_THERMAL is on and THERMAL=m, CPUFREQ_DT cannot be =y:
