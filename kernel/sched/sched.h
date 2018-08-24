@@ -1,4 +1,3 @@
-
 #include <linux/sched.h>
 #include <linux/sched/sysctl.h>
 #include <linux/sched/rt.h>
@@ -118,6 +117,11 @@ static inline int task_has_rt_policy(struct task_struct *p)
 static inline int task_has_dl_policy(struct task_struct *p)
 {
 	return dl_policy(p->policy);
+}
+
+static inline bool dl_time_before(u64 a, u64 b)
+{
+	return (s64)(a - b) < 0;
 }
 
 /*
@@ -671,10 +675,9 @@ struct rq {
 	unsigned long cpu_capacity;
 	unsigned long cpu_capacity_orig;
 
-	struct callback_head *balance_callback;
-
 	unsigned char idle_balance;
 	/* For active balancing */
+	int post_schedule;
 	int active_balance;
 	int push_cpu;
 	struct task_struct *push_task;
@@ -822,21 +825,6 @@ extern int migrate_swap(struct task_struct *, struct task_struct *);
 #endif /* CONFIG_NUMA_BALANCING */
 
 #ifdef CONFIG_SMP
-
-static inline void
-queue_balance_callback(struct rq *rq,
-		       struct callback_head *head,
-		       void (*func)(struct rq *rq))
-{
-	lockdep_assert_held(&rq->lock);
-
-	if (unlikely(head->next))
-		return;
-
-	head->func = (void (*)(struct callback_head *))func;
-	head->next = rq->balance_callback;
-	rq->balance_callback = head;
-}
 
 extern void sched_ttwu_pending(void);
 
@@ -1266,9 +1254,9 @@ static const u32 prio_to_wmult[40] = {
 #define ENQUEUE_HEAD		0x08
 #define ENQUEUE_REPLENISH	0x10
 #ifdef CONFIG_SMP
-#define ENQUEUE_MIGRATED	0x20
+#define ENQUEUE_WAKING		0x20
 #else
-#define ENQUEUE_MIGRATED	0x00
+#define ENQUEUE_WAKING		0x00
 #endif
 #define ENQUEUE_WAKEUP_NEW	0x40
 
@@ -1302,6 +1290,7 @@ struct sched_class {
 	void (*migrate_task_rq)(struct task_struct *p);
 
 	void (*post_schedule) (struct rq *this_rq);
+	void (*task_waking) (struct task_struct *task);
 	void (*task_woken) (struct rq *this_rq, struct task_struct *task);
 
 	void (*set_cpus_allowed)(struct task_struct *p,
@@ -1442,26 +1431,10 @@ extern void post_init_entity_util_avg(struct sched_entity *se);
 
 static inline void __add_nr_running(struct rq *rq, unsigned count)
 {
+	unsigned prev_nr = rq->nr_running;
 
-	struct nr_stats_s *nr_stats = &per_cpu(runqueue_stats, rq->cpu);
-	unsigned int ave_nr_running = nr_stats->ave_nr_running;
-	s64 nr, deltax;
+	rq->nr_running = prev_nr + count;
 
-	deltax = rq->clock_task - nr_stats->nr_last_stamp;
-	nr = NR_AVE_SCALE(rq->nr_running);
-
-	if (deltax > NR_AVE_PERIOD)
-		ave_nr_running = nr;
-	else
-		ave_nr_running +=
-			NR_AVE_DIV_PERIOD(deltax * (nr - ave_nr_running));
-
-	return ave_nr_running;
-}
-#endif
-
-static inline void add_nr_running(struct rq *rq, unsigned count)
-{
 	if (prev_nr < 2 && rq->nr_running >= 2) {
 #ifdef CONFIG_SMP
 		if (!rq->rd->overload)
