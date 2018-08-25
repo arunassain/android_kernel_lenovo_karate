@@ -289,17 +289,12 @@ config CPU_FREQ_GOV_IMPULSE
 	tristate "'interactive' cpufreq policy governor"
 	depends on CPU_FREQ
 	help
-	'impulse' - This driver adds a dynamic cpufreq policy governor
-          designed for latency-sensitive workloads.
-          If in doubt, say N.
+	  'impulse' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+	  If in doubt, say N.
 
-config CPU_INPUT_BOOST
-	bool "CPU Input Boost"
-	help
-	  Boosts the CPU on touchscreen and touchpad input. Boost frequencies and
-	  durations are calculated automatically.
 
-	
+
 comment "CPU frequency scaling drivers"
 
 menu "x86 CPU frequency scaling drivers"
