@@ -233,17 +233,9 @@ static inline bool need_pull_dl_task(struct rq *rq, struct task_struct *prev)
 	return dl_task(prev);
 }
 
-static DEFINE_PER_CPU(struct callback_head, dl_balance_head);
-
-static void push_dl_tasks(struct rq *);
-
-static inline void queue_push_tasks(struct rq *rq)
+static inline void set_post_schedule(struct rq *rq)
 {
-	if (!has_pushable_dl_tasks(rq))
-		return;
-
-	queue_balance_callback(rq, &per_cpu(dl_balance_head, rq->cpu),
-		push_dl_tasks);
+	rq->post_schedule = has_pushable_dl_tasks(rq);
 }
 
 #else
