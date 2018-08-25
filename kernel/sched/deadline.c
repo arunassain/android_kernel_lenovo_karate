@@ -1081,7 +1081,7 @@ struct task_struct *pick_next_task_dl(struct rq *rq, struct task_struct *prev)
 		start_hrtick_dl(rq, p);
 #endif
 
-	queue_push_tasks(rq);
+	set_post_schedule(rq);
 
 	return p;
 }
