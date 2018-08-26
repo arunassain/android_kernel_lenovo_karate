@@ -79,6 +79,7 @@ static int msm_vi_feed_tx_ch = 2;
 static int mi2s_rx_bit_format = SNDRV_PCM_FORMAT_S16_LE;
 static int mi2s_rx_bits_per_sample = 16;
 static int mi2s_rx_sample_rate = SAMPLING_RATE_48KHZ;
+static int spk_pa_mode = SPK_PA_MODE3;
 static int mi2s_tx_bit_format = SNDRV_PCM_FORMAT_S16_LE;
 static int mi2s_tx_bits_per_sample = 16;
 static int mi2s_tx_sample_rate = SAMPLING_RATE_48KHZ;
