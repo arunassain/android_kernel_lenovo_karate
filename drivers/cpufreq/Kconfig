@@ -234,7 +234,6 @@ config CPU_FREQ_GOV_SCHED
 	  scheduler as a function of cpu capacity utilization. It does
 	  not evaluate utilization on a periodic basis (as ondemand
 	  does) but instead is event-driven by the scheduler.
-
 	  If in doubt, say N.
 
 config CPU_INPUT_BOOST
@@ -290,16 +289,6 @@ config CPUFREQ_DT
 
 	  If in doubt, say N.
 
-config CPU_BOOST
-	tristate "Event base short term CPU freq boost"
-	depends on CPU_FREQ
-	help
-	  This driver boosts the frequency of one or more CPUs based on
-	  various events that might occur in the system. As of now, the
-	  events it reacts to are:
-	  - Migration of important threads from one CPU to another.
-
-	  If in doubt, say N.
 
 menu "x86 CPU frequency scaling drivers"
 depends on X86
