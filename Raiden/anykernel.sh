@@ -141,24 +141,35 @@ replace_file() {
 ## AnyKernel permissions
 # set permissions for included files
 chmod -R 755 $ramdisk
-chmod 750 $ramdisk/sbin/busybox;
+chmod 750 $ramdisk/sbin/spa;
 
 ## AnyKernel install
 dump_boot;
 
 # begin ramdisk changes
 
-# insert initd scripts
-
-# insert patches
-
-# adb secure
-replace_string default.prop "ro.adb.secure=0" "ro.adb.secure=1" "ro.adb.secure=0";
-replace_string default.prop "ro.secure=0" "ro.secure=1" "ro.secure=0";
-
+# init.rc
+backup_file init.rc;
+grep "import /init.spectrum.rc" init.rc >/dev/null || sed -i '1,/.*import.*/s/.*import.*/import \/init.spectrum.rc\n&/' init.rc
+insert_line init.rc "init.raid.rc" after "import /init.environ.rc" "import /init.raid.rc\n";
 # end ramdisk changes
 
 write_boot;
 
 ## end install
 
+# Add empty profile locations
+if [ ! -d /data/media/Spectrum ]; then
+  ui_print " "; ui_print "Creating /data/media/0/Spectrum...";
+  mkdir /data/media/0/Spectrum;
+fi
+if [ ! -d /data/media/Spectrum/profiles ]; then
+  mkdir /data/media/0/Spectrum/profiles;
+fi
+if [ ! -d /data/media/Spectrum/profiles/*.profile ]; then
+  ui_print " "; ui_print "Creating empty profile files...";
+  touch /data/media/0/Spectrum/profiles/balance.profile;
+  touch /data/media/0/Spectrum/profiles/performance.profile;
+  touch /data/media/0/Spectrum/profiles/battery.profile;
+  touch /data/media/0/Spectrum/profiles/gaming.profile;
+fi
