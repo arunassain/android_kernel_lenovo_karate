@@ -95,17 +95,21 @@ on property:persist.spectrum.profile=3
 on property:persist.spectrum.profile=2
     # Configure governor settings for big cluster
     write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "pwrutilx"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 422400
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1209600
 
     # Configure governor settings for little cluster
     write /sys/devices/system/cpu/cpu4/online 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "pwrutilx"
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 345600
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1094400
 
+    # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 300000000
     write /sys/class/kgsl/kgsl-3d0/default_pwrlevel 4
-    write /sys/class/kgsl/kgsl-3d0/devfreq/governor powersave
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor simple_ondemand
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
+    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 20
+    write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 4000
     write /proc/sys/kernel/sched_boost 0
