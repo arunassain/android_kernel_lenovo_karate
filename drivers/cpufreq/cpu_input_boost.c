@@ -170,7 +170,12 @@ static void __cpu_general_boost_kick(struct boost_drv *b,
 
 void cpu_general_boost_kick(unsigned int duration_ms)
 {
-	struct boost_drv *b = boost_drv_g;
+	struct boost_drv *b;
+
+	if (!duration_ms)
+		return;
+
+	b = boost_drv_g;
 
 	if (!b)
 		return;
@@ -183,7 +188,12 @@ void cpu_general_boost_kick(unsigned int duration_ms)
 
 void cpu_input_boost_kick_max(unsigned int duration_ms)
 {
-	struct boost_drv *b = boost_drv_g;
+	struct boost_drv *b;
+
+	if (!duration_ms)
+		return;
+
+	b = boost_drv_g;
 
 	if (!b)
 		return;
