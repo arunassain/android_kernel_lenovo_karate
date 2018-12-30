@@ -45,17 +45,20 @@ on property:sys.boot_completed=1
 on property:persist.spectrum.profile=0
     # Configure governor settings for big cluster
     write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedalucard"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 998400
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1344000
     write /sys/devices/system/cpu/cpu0/cpufreq/schedalucard/iowait_boost_enable 0
 
     # Configure governor settings for little cluster
     write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedalucard"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 902400
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1094400
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:960000 4:768000"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 1500
+    
 
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 400000000
@@ -102,9 +105,10 @@ on property:persist.spectrum.profile=1
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 1000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 10000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1248000 4:960000"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 1500
 
-
-    write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 300000000
+    write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 450000000
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
     write /proc/sys/kernel/sched_boost 0
 
@@ -128,22 +132,30 @@ on property:persist.spectrum.profile=3
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 1000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 10000
     write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:768000 4:0"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 1500
 
     write /sys/class/kgsl/kgsl-3d0/devfreq/max_freq 400000000
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
     write /proc/sys/kernel/sched_boost 1
 
+    # Storage
+    write /sys/block/mmcblk0/queue/scheduler cfq
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+    write /sys/block/mmcblk1/queue/scheduler cfq
+    write /sys/block/mmcblk1/queue/read_ahead_kb 2048
+
 # Battery
 on property:persist.spectrum.profile=2
     # Configure governor settings for big cluster
     write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "pwrutilx"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 960000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1248000
 
     # Configure governor settings for little cluster
     write /sys/devices/system/cpu/cpu4/online 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "pwrutilx"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 768000
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 998400
 
