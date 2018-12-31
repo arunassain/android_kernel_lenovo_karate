@@ -283,4 +283,6 @@ config DEVFREQ_MSM_CPUBW_BOOST_FREQ
 	help
 	  Boost frequency for the MSM DDR bus.
 
+endif
+
 endif # PM_DEVFREQ
