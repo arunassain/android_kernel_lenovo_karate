@@ -761,7 +761,6 @@ adreno_ringbuffer_issueibcmds(struct kgsl_device_private *dev_priv,
 	 */
 	if (!(cmdbatch->flags & KGSL_CMDBATCH_MARKER)
 		&& !(cmdbatch->flags & KGSL_CMDBATCH_SYNC))
-		device->flags &= ~KGSL_FLAG_WAKE_ON_TOUCH;
 
 	/* A3XX does not have support for command batch profiling */
 	if (adreno_is_a3xx(adreno_dev) &&
