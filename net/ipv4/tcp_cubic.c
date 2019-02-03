@@ -417,7 +417,7 @@ static void hystart_update(struct sock *sk, u32 delay)
 /* Track delayed acknowledgment ratio using sliding window
  * ratio = (15*ratio + sample) / 16
  */
-static void bictcp_acked(struct sock *sk, const struct ack_sample *sample)
+static void bictcp_acked(struct sock *sk, u32 cnt, s32 rtt_us)
 {
 	const struct inet_connection_sock *icsk = inet_csk(sk);
 	const struct tcp_sock *tp = tcp_sk(sk);
@@ -434,14 +434,14 @@ static void bictcp_acked(struct sock *sk, const struct ack_sample *sample)
 	}
 
 	/* Some calls are for duplicates without timetamps */
-	if (sample->rtt_us < 0)
+	if (rtt_us < 0)
 		return;
 
 	/* Discard delay samples right after fast recovery */
 	if (ca->epoch_start && (s32)(tcp_time_stamp - ca->epoch_start) < HZ)
 		return;
 
-	delay = (sample->rtt_us << 3) / USEC_PER_MSEC;
+	delay = (rtt_us << 3) / USEC_PER_MSEC;
 	if (delay == 0)
 		delay = 1;
 
