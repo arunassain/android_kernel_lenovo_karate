@@ -112,6 +112,4 @@ source "drivers/staging/prima/Kconfig"
 
 source "drivers/staging/qcacld-2.0/Kconfig"
 
-source "drivers/staging/frandom/Kconfig"
-
 endif # STAGING
