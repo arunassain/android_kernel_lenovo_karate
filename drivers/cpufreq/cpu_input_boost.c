@@ -24,13 +24,12 @@ static __read_mostly unsigned short input_boost_duration = CONFIG_INPUT_BOOST_DU
 static __read_mostly int input_stune_boost = CONFIG_INPUT_BOOST_STUNE_LEVEL;
 static __read_mostly int max_stune_boost = CONFIG_MAX_BOOST_STUNE_LEVEL;
 static __read_mostly int general_stune_boost = CONFIG_GENERAL_BOOST_STUNE_LEVEL;
-static __read_mostly int display_stune_boost = CONFIG_DISPLAY_BOOST_STUNE_LEVEL;
 
 module_param(input_boost_duration, short, 0644);
 module_param_named(dynamic_stune_boost, input_stune_boost, int, 0644);
 module_param(max_stune_boost, int, 0644);
 module_param(general_stune_boost, int, 0644);
-module_param(display_stune_boost, int, 0644);
+module_param(general_stune_boost, int, 0644);
 
 /* Available bits for boost_drv state */
 #define SCREEN_AWAKE		(1U << 0)
@@ -41,7 +40,6 @@ module_param(display_stune_boost, int, 0644);
 #define INPUT_STUNE_BOOST	(1U << 5)
 #define MAX_STUNE_BOOST		(1U << 6)
 #define GENERAL_STUNE_BOOST	(1U << 7)
-#define DISPLAY_STUNE_BOOST	(1U << 8)
 
 struct boost_drv {
 	struct workqueue_struct *wq;
@@ -61,7 +59,6 @@ struct boost_drv {
 	int input_stune_slot;
 	int max_stune_slot;
 	int general_stune_slot;
-	int display_stune_slot;
 };
 
 static struct boost_drv *boost_drv_g;
@@ -288,7 +285,6 @@ static int fb_notifier_cb(struct notifier_block *nb,
 	struct boost_drv *b = container_of(nb, typeof(*b), fb_notif);
 	struct fb_event *evdata = data;
 	int *blank = evdata->data;
-	u32 state = get_boost_state(b);
 
 	/* Parse framebuffer blank events as soon as they occur */
 	if (action != FB_EARLY_EVENT_BLANK)
@@ -298,12 +294,8 @@ static int fb_notifier_cb(struct notifier_block *nb,
 	if (*blank == FB_BLANK_UNBLANK) {
 		set_boost_bit(b, SCREEN_AWAKE);
 		__cpu_input_boost_kick_max(b, CONFIG_WAKE_BOOST_DURATION_MS);
-		set_stune_boost(b, state, DISPLAY_STUNE_BOOST, display_stune_boost,
-			        &b->display_stune_slot);
 	} else {
 		clear_boost_bit(b, SCREEN_AWAKE);
-		clear_stune_boost(b, state, DISPLAY_STUNE_BOOST,
-				  b->display_stune_slot);
 		unboost_all_cpus(b);
 	}
 
