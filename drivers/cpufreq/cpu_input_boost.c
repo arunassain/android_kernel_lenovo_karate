@@ -29,7 +29,6 @@ module_param(input_boost_duration, short, 0644);
 module_param_named(dynamic_stune_boost, input_stune_boost, int, 0644);
 module_param(max_stune_boost, int, 0644);
 module_param(general_stune_boost, int, 0644);
-module_param(general_stune_boost, int, 0644);
 
 /* Available bits for boost_drv state */
 #define SCREEN_AWAKE		(1U << 0)
