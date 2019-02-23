@@ -29,9 +29,9 @@ make nconfig
 
 # Paths
 KERNEL_DIR=`pwd`
-RESOURCE_DIR="/home/ravi_rahul1967/kernel"
+RESOURCE_DIR="/home/arun_assain98/kernel"
 ANYKERNEL_DIR="$RESOURCE_DIR/Raiden"
-TOOLCHAIN_DIR="/home/ravi_rahul1967/kernel/toolchain"
+TOOLCHAIN_DIR="/home/arun_assain98/kernel/toolchain"
 REPACK_DIR="$ANYKERNEL_DIR"
 PATCH_DIR="$ANYKERNEL_DIR/patch"
 MODULES_DIR="$ANYKERNEL_DIR/modules"
