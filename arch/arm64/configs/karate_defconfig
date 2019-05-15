@@ -1,4 +1,4 @@
-CONFIG_LOCALVERSION="-RaidenKernel-r8"
+CONFIG_LOCALVERSION="-RaidenKernel-r9"
 # CONFIG_USELIB is not set
 # CONFIG_AUDIT is not set
 CONFIG_NO_HZ=y
